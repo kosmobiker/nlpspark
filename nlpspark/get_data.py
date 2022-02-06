@@ -25,7 +25,7 @@ periods = conf['default']['PERIODS']
 news_api_key = conf['default']['NEWS_API_KEY']
 # data1 = get_raw_json(querry, periods, news_api_key)
 # save_locally(data1, path_to_datalale, NOW)
-path_to_datalale = os.path.abspath(os.path.join(ROOT_DIR ,"\datalake"))
+path_to_datalale = os.path.abspath(os.path.join(ROOT_DIR ,"/datalake/"))
 print(ROOT_DIR, path_to_datalale)
 log.info('finish')
 
