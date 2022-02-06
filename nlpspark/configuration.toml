@@ -1,4 +1,4 @@
-name='Develop"
+name = "Develop"
 [default]
 QUERRY = "Belarus"
 PERIODS = 0

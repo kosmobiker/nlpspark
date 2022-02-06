@@ -12,22 +12,34 @@ from utils.get_raw_json import get_raw_json
 from utils.save_file import save_locally
 
 
-
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
-PATH_TO_CONFIG_FILE = os.path.abspath(os.path.join(ROOT_DIR ,"configuration.toml"))
-NOW  = datetime.now().strftime("%Y-%m-%YT%H:%M:%S")
+PATH_TO_CONFIG_FILE = os.path.abspath(os.path.join(ROOT_DIR, "configuration.toml"))
+NOW  = datetime.now().timestamp()
+
 log = setup_applevel_logger(file_name = 'logs/test.log')
 
-log.info('start')
 conf = get_conf(PATH_TO_CONFIG_FILE)
 querry = conf['default']['QUERRY']
 periods = conf['default']['PERIODS']
 news_api_key = conf['default']['NEWS_API_KEY']
-# data1 = get_raw_json(querry, periods, news_api_key)
-# save_locally(data1, path_to_datalale, NOW)
-path_to_datalale = os.path.abspath(os.path.join(ROOT_DIR ,"/datalake/"))
-print(ROOT_DIR, path_to_datalale)
-log.info('finish')
+path_to_datalake = os.path.abspath(os.path.join(ROOT_DIR , "..", "datalake"))
+
+def get_data(
+        querry: str,
+        periods: int,
+        news_api_key: str,
+        path_to_datalake: str,
+        ):
+    try:
+        news_feed = get_raw_json(querry, periods, news_api_key)
+        save_locally(news_feed, path_to_datalake, "newsfeed_" + str(round(NOW)))
+        return True
+    except Exception as err:
+        log.error(err)
+
+   
+
+
 
 
 

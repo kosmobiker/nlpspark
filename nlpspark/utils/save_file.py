@@ -11,12 +11,19 @@ def save_locally(raw_json: dict, path: str, file_name: str):
     """
     save files locally
     """
-    full_path = path + file_name + ".json"
+    full_path = path + os.path.sep + file_name + ".json"
     try:
         if not os.path.exists(path):
             os.makedirs(path)
         with open(full_path, 'w') as f:
-            json.dump(raw_json, f)
-        log.debug("File sucessfully saved to {}".format(path))
-    except:
+            json.dump(raw_json, f, indent=4)
+        log.debug("File {} sucessfully saved to {}".format(file_name, path))
+    except Exception as err:
+        log.error(err)
         log.info("File {} wasn't saved to local storage".format(file_name))
+
+def save_to_s3(raw_json: dict, path: str, file_name: str):
+    """
+    save files to AWS S3 Bucket
+    """
+    
