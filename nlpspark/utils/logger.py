@@ -1,0 +1,27 @@
+import logging
+import sys
+
+APP_LOGGER_NAME = 'NLPSpark App'
+
+def setup_applevel_logger(logger_name = APP_LOGGER_NAME, file_name=None):
+    """
+    main logger function
+    """     
+    logger = logging.getLogger(logger_name)
+    logger.setLevel(logging.DEBUG)
+    formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+    sh = logging.StreamHandler(sys.stdout)
+    sh.setFormatter(formatter)
+    logger.handlers.clear()
+    logger.addHandler(sh)
+    if file_name:
+        fh = logging.FileHandler(file_name)
+        fh.setFormatter(formatter)
+        logger.addHandler(fh)
+    return logger
+
+def get_logger(module_name):
+    """
+    it is used for logging from modules
+    """
+    return logging.getLogger(APP_LOGGER_NAME).getChild(module_name)
