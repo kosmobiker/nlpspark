@@ -9,25 +9,16 @@ from .logger import get_logger
 log = get_logger(__name__)
 
 
-def get_raw_json(
-            querry: str,
-            periodicity: int,
-            newsapi_key: str,
-            ) -> dict:
+def get_raw_json(query_params: dict):
     """
     Function to get info from News API
     """
-    from_period = (datetime.now() - timedelta(minutes=periodicity)).strftime("%Y-%m-%YT%H:%M:%S")
-    url = ('https://newsapi.org/v2/everything?'
-         'q={}&'
-         'from={}&'
-         'sortBy=popularity&'
-         'apiKey={}'.format(querry, from_period, newsapi_key))
+    url = 'https://newsapi.org/v2/everything'
     try:
-        response = requests.get(url, timeout=10)
+        response = requests.get(url, params=query_params, timeout=10)
         response.raise_for_status()
         log.debug("Getting information from NewsAPI...")
-        return response.json()
+        return response
     except requests.exceptions.HTTPError as errh:
         log.error(errh)
     except requests.exceptions.ConnectionError as errc:
