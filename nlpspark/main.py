@@ -17,7 +17,7 @@ from utils.save_file import save_locally, save_azure
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 PATH_TO_CONFIG_FILE = os.path.abspath(os.path.join(ROOT_DIR, "configuration.toml"))
 
-log = setup_applevel_logger(file_name = 'logs/test.log')
+log = setup_applevel_logger(file_name = 'nlpspark/logs/test.log')
 
 conf = get_conf(PATH_TO_CONFIG_FILE)
 topic = conf['default']['TOPIC']
@@ -56,7 +56,7 @@ def get_news(
 
 if __name__ == '__main__':
     data = get_news(pages, periods, querry_params)
-    save_locally(data, path_to_datalake)
+    # save_locally(data, path_to_datalake)
     save_azure(data, container_name)
     
 

@@ -6,6 +6,8 @@ authors = ["kosmobiker <kosmobiker@gmail.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.9"
+azure-storage-blob = "^12.9.0"
+toml = "^0.10.2"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
