@@ -10,7 +10,7 @@ from datetime import datetime, timedelta
 from unittest.mock import DEFAULT
 from utils.logger import setup_applevel_logger
 from utils.config_reader import get_conf
-from utils.get_raw_json import get_raw_json
+from utils.get_response import get_response
 from utils.save_file import save_locally, save_azure
 
 
@@ -25,19 +25,16 @@ conf = get_conf(PATH_TO_CONFIG_FILE)
 topic = conf['default']['TOPIC']
 periods = conf['default']['PERIODS']
 language = conf['default']['LANGUAGE']
-pages = conf['default']['PAGES']
 news_api_key = conf['default']['NEWS_API_KEY']
 querry_params = {'q' : topic, 'apiKey' : news_api_key, 'language': language}
 path_to_datalake = os.path.abspath(os.path.join(ROOT_DIR , "..", "datalake"))
 container_name = conf['default']['CONTAINER_NAME']
 
 def get_news(
-        n: int,
         p: int,
         params: dict
         ) -> list:
     """
-    n - number of pages
     p - periodicity - hours
     params - parameters of the GET request
 
@@ -46,18 +43,18 @@ def get_news(
     temp = []
     now = (datetime.now() - timedelta(hours=p)).strftime("%Y-%m-%dT%H:%M:%S")
     params['from'] = now
-    try:
-        for i in range(1, n + 1):
-            params['page'] = i
-            r = get_raw_json(params).json()['articles']
-            temp += r
-    except Exception as err:
-        log.error(err)
-    finally:
-        return temp
+    r = get_response(params)
+    num_of_pages = r.json()['totalResults'] // 20 + 1
+    for page in range(1, num_of_pages + 1):
+        params['page'] = page
+        r_data = get_response(params).json()['articles']
+        if len(r_data) > 0:
+            temp += r_data
+    return temp  
 
 if __name__ == '__main__':
-    data = get_news(pages, periods, querry_params)
+    data = get_news(periods, querry_params)
     # save_locally(data, path_to_datalake)
-    save_azure(data, container_name)
+    if len(data) > 0:
+        save_azure(data, container_name)
 

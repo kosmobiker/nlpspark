@@ -9,7 +9,7 @@ from .logger import get_logger
 log = get_logger(__name__)
 
 
-def get_raw_json(query_params: dict):
+def get_response(query_params: dict):
     """
     Function to get info from News API
     """
