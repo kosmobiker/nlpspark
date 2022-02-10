@@ -44,13 +44,16 @@ def get_news(
     now = (datetime.now() - timedelta(hours=p)).strftime("%Y-%m-%dT%H:%M:%S")
     params['from'] = now
     r = get_response(params)
-    num_of_pages = r.json()['totalResults'] // 20 + 1
-    for page in range(1, num_of_pages + 1):
-        params['page'] = page
-        r_data = get_response(params).json()['articles']
-        if len(r_data) > 0:
-            temp += r_data
-    return temp  
+    if r.json()['status'] == 'ok':
+        num_of_pages = r.json()['totalResults'] // 20 + 1
+        for page in range(1, num_of_pages + 1):
+            params['page'] = page
+            r_data = get_response(params).json()['articles']
+            if len(r_data) > 0:
+                temp += r_data
+        return temp
+    else:
+        log.error("Can't get info from NewsAPI")
 
 if __name__ == '__main__':
     data = get_news(periods, querry_params)
