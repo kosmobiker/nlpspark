@@ -1,7 +1,7 @@
 name = "Develop"
 [default]
-TOPIC = "Belarus"
-PERIODS = 24
+TOPIC = "Tsikhanouskaya"
+PERIODS = 10
 LANGUAGE = "en"
 NEWS_API_KEY = "d7c2f18ab0e24ed8a77d9b91ac9bce2e"
 CONTAINER_NAME = "nlpspark"

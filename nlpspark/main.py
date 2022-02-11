@@ -4,13 +4,12 @@ and save it ti specific location
 Can be either local storage or S3
 """
 import os
-import json
+import requests
 import pandas as pd
 from datetime import datetime, timedelta
 from unittest.mock import DEFAULT
 from utils.logger import setup_applevel_logger
 from utils.config_reader import get_conf
-from utils.get_response import get_response
 from utils.save_file import save_locally, save_azure
 
 
@@ -43,17 +42,31 @@ def get_news(
     temp = []
     now = (datetime.now() - timedelta(hours=p)).strftime("%Y-%m-%dT%H:%M:%S")
     params['from'] = now
-    r = get_response(params)
-    if r.json()['status'] == 'ok':
-        num_of_pages = r.json()['totalResults'] // 20 + 1
-        for page in range(1, num_of_pages + 1):
-            params['page'] = page
-            r_data = get_response(params).json()['articles']
-            if len(r_data) > 0:
-                temp += r_data
-        return temp
-    else:
-        log.error("Can't get info from NewsAPI")
+    url = 'https://newsapi.org/v2/everything'
+    temp = []
+    try:
+        response = requests.get(url, params, timeout=10)
+        response.raise_for_status()
+        log.debug("Getting information from NewsAPI...")
+        r = response.json()
+        if r['status'] == 'ok':
+            num_of_pages = r['totalResults'] // 20
+            for page in range(1, num_of_pages + 1):
+                params['page'] = page
+                response = requests.get(url, params, timeout=10)
+                response.raise_for_status()
+                r_data = response.json()
+                if len(r_data['articles']) > 0:
+                     temp += r_data['articles']
+    except requests.exceptions.HTTPError as errh:
+        log.error(errh)
+    except requests.exceptions.ConnectionError as errc:
+        log.error(errc)
+    except requests.exceptions.Timeout as errt:
+        log.error(errt)
+    except requests.exceptions.RequestException as err:
+        log.error(err)
+    return temp
 
 if __name__ == '__main__':
     data = get_news(periods, querry_params)
