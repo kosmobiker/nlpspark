@@ -18,7 +18,8 @@ PATH_TO_CONFIG_FILE = os.path.abspath(os.path.join(ROOT_DIR, "configuration.toml
 
 if not os.path.exists('nlpspark/logs'):
     os.makedirs('nlpspark/logs')
-log = setup_applevel_logger(file_name = 'nlpspark/logs/test.log')
+date_log_file = (datetime.now()).strftime("%Y-%m-%d")
+log = setup_applevel_logger(file_name = f'nlpspark/logs/log_{date_log_file}.log')
 
 conf = get_conf(PATH_TO_CONFIG_FILE)
 topic = conf['default']['TOPIC']
@@ -29,10 +30,7 @@ querry_params = {'q' : topic, 'apiKey' : news_api_key, 'language': language}
 path_to_datalake = os.path.abspath(os.path.join(ROOT_DIR , "..", "datalake"))
 container_name = conf['default']['CONTAINER_NAME']
 
-def get_news(
-        p: int,
-        params: dict
-        ) -> list:
+def get_news(p: int, params: dict) -> list:
     """
     p - periodicity - hours
     params - parameters of the GET request
