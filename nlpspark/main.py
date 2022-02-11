@@ -49,8 +49,10 @@ def get_news(
         response.raise_for_status()
         log.debug("Getting information from NewsAPI...")
         r = response.json()
+        log.info(f"status is {r['status']}")
         if r['status'] == 'ok':
             num_of_pages = r['totalResults'] // 20
+            log.debug(f'number of pages is {num_of_pages}')
             for page in range(1, num_of_pages + 1):
                 params['page'] = page
                 response = requests.get(url, params, timeout=10)
