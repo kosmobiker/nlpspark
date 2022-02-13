@@ -50,7 +50,7 @@ def get_news(p: int, params: dict) -> list:
         log.info(f"status is {r['status']}")
         if r['status'] == 'ok':
             num_of_pages = r['totalResults'] // 20
-            log.debug(f'number of pages is {num_of_pages}')
+            log.debug(f'Total number of pages is {num_of_pages}')
             for page in range(1, num_of_pages + 1):
                 params['page'] = page
                 response = requests.get(url, params, timeout=10)
