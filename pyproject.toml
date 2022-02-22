@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "nlpspark"
 version = "0.1.0"
-description = "demo project to use Databricks for text mining"
+description = "just small demo to work with API"
 authors = ["kosmobiker <kosmobiker@gmail.com>"]
 
 [tool.poetry.dependencies]
